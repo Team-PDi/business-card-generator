@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Business Card Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .card-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .card-preview {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #business-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: fit-content;
+            text-align: left;
+            position: relative;
+        }
+
+        #business-card h2 {
+            margin-bottom: 5px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        #business-card hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+
+        #business-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        #business-card .separator {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+        }
+
+        .social-icons input {
+            margin-top: 5px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Digital Business Card Generator</h1>
+	
+
+        <div class="card-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" placeholder="Enter your name">
+
+            <label for="title">Job Title:</label>
+            <input type="text" id="title" placeholder="Enter your job title">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number">
+
+            <label for="website">Website:</label>
+            <input type="url" id="website" placeholder="Enter your website URL">
+
+            <label for="business-name">Business Name:</label>
+            <input type="text" id="business-name" placeholder="Enter your business name">
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" placeholder="Enter your address">
+
+            <label for="social-instagram">Instagram:</label>
+            <input type="url" id="social-instagram" placeholder="eg. instagram.com/planetdeitech">
+
+            <label for="social-facebook">Facebook:</label>
+            <input type="url" id="social-facebook" placeholder="eg. facebook.com/planetdeitech">
+
+            <label for="social-twitter">Twitter:</label>
+            <input type="url" id="social-twitter" placeholder="eg. twitter.com/planetdeitech">
+
+            <label for="social-tiktok">TikTok:</label>
+            <input type="url" id="social-tiktok" placeholder="eg. tiktok.com/planetdeitech">
+
+            <label for="social-pinterest">Pinterest:</label>
+            <input type="url" id="social-pinterest" placeholder="eg. pinterest.com/planetdeitech">
+
+            <button id="generate">Generate Business Card</button>
+        </div>
+
+        <div class="card-preview" id="card-preview">
+            <div id="business-card" style="display: none;">
+                <h2 id="card-name"></h2>
+                <p id="card-title"></p>
+                <div class="separator"></div>
+                <div class="separator"></div>
+                <p id="card-business-name"></p>
+                <p id="card-address"></p>
+                <p id="card-website"></p>
+                <div class="separator"></div>
+                <p id="card-email"></p>
+                <p id="card-phone"></p>
+                <div id="social-links">
+                    <p id="card-instagram"></p>
+                    <p id="card-facebook"></p>
+                    <p id="card-twitter"></p>
+                    <p id="card-tiktok"></p>
+                    <p id="card-pinterest"></p>
+                </div>
+                <div id="qr-code"></div>
+            </div>
+
+            <button id="download-image" style="display: none;">Download Image</button>
+            <button id="download" style="display: none;">Download vCard</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generate').addEventListener('click', () => {
+            const name = document.getElementById('name').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const website = document.getElementById('website').value.trim();
+            const businessName = document.getElementById('business-name').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            const instagram = document.getElementById('social-instagram').value.trim();
+            const facebook = document.getElementById('social-facebook').value.trim();
+            const twitter = document.getElementById('social-twitter').value.trim();
+            const tiktok = document.getElementById('social-tiktok').value.trim();
+            const pinterest = document.getElementById('social-pinterest').value.trim();
+
+            // Update card preview only with non-empty fields
+            const card = document.getElementById('business-card');
+            card.style.display = 'block';
+            document.getElementById('download').style.display = 'inline-block';
+            document.getElementById('download-image').style.display = 'inline-block';
+
+            document.getElementById('card-name').textContent = name || '';
+            document.getElementById('card-title').textContent = title || '';
+            document.getElementById('card-business-name').textContent = businessName ? `Business Name: ${businessName}` : '';
+            document.getElementById('card-address').textContent = address ? `Address: ${address}` : '';
+            document.getElementById('card-website').textContent = website ? `Website: ${website}` : '';
+            document.getElementById('card-email').textContent = email ? `Email: ${email}` : '';
+            document.getElementById('card-phone').textContent = phone ? `Phone: ${phone}` : '';
+
+            document.getElementById('card-instagram').textContent = instagram ? `Instagram: ${instagram}` : '';
+            document.getElementById('card-facebook').textContent = facebook ? `Facebook: ${facebook}` : '';
+            document.getElementById('card-twitter').textContent = twitter ? `Twitter: ${twitter}` : '';
+            document.getElementById('card-tiktok').textContent = tiktok ? `TikTok: ${tiktok}` : '';
+            document.getElementById('card-pinterest').textContent = pinterest ? `Pinterest: ${pinterest}` : '';
+
+            // Generate QR Code for name and contact info
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = ''; // Clear previous QR code
+            const qrData = `Name: ${name}\nJob Title: ${title}\nEmail: ${email}\nPhone: ${phone}\nWebsite: ${website}\nInstagram: ${instagram}\nFacebook: ${facebook}\nTwitter: ${twitter}\nTikTok: ${tiktok}\nPinterest: ${pinterest}`;
+            QRCode.toCanvas(qrCodeContainer, qrData, { width: 128 });
+        });
+
+        document.getElementById('download-image').addEventListener('click', () => {
+            const card = document.getElementById('business-card');
+            html2canvas(card).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'business-card.png';
+                link.click();
+            });
+        });
+
+        document.getElementById('download').addEventListener('click', () => {
+            const name = document.getElementById('name').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const website = document.getElementById('website').value.trim();
+            const instagram = document.getElementById('social-instagram').value.trim();
+            const facebook = document.getElementById('social-facebook').value.trim();
+            const twitter = document.getElementById('social-twitter').value.trim();
+            const tiktok = document.getElementById('social-tiktok').value.trim();
+            const pinterest = document.getElementById('social-pinterest').value.trim();
+
+            const vCardData = [
+                "BEGIN:VCARD",
+                "VERSION:3.0",
+                `FN:${name}`,
+                `TITLE:${title}`,
+                `EMAIL:${email}`,
+                `TEL:${phone}`,
+                `URL:${website}`,
+                `X-INSTAGRAM:${instagram}`,
+                `X-FACEBOOK:${facebook}`,
+                `X-TWITTER:${twitter}`,
+                `X-TIKTOK:${tiktok}`,
+                `X-PINTEREST:${pinterest}`,
+                "END:VCARD"
+            ].join("\n");
+
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'business-card.vcf';
+            link.click();
+        });
+    </script>
+</body>
+</html>
